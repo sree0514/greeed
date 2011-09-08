@@ -1,5 +1,5 @@
 class Dice 
-  def roll
+  def self.roll
     rand(5)
   end
 end

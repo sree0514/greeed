@@ -44,4 +44,19 @@ describe Player do
     @player.calculate_points(5,5)
     @player.points.should == 50
   end
+  
+  it "gets second chance again if he gets score for five rolls" do
+    5.times { |i| @player.calculate_points(6,i) }  
+    @player.has_next_chance?.should be_true
+  end
 end
+
+
+
+
+
+
+
+
+
+

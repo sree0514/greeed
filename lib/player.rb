@@ -1,13 +1,17 @@
 class Player
   attr_accessor :count
   attr_accessor :points
+  attr_accessor :values
   MAX_REPEATS = 3
+  
   def initialize 
     @count = 0
     @points = 0
+    @values = Array.new(5)
   end
   
   def calculate_points(value, iteration)
+    @values[iteration] = value
     @previous_value = value if iteration == 0
     if @previous_value == value || value == 1 || value == 5
       @count += 1
@@ -26,10 +30,23 @@ class Player
     end
     @previous_value = value
   end 
+  
+  def has_next_chance?
+    previous_value = 0
+    count=1
+    @values.each do |index, value| 
+       if [2,3,4,6].include?(value)
+         if @values[index] == @values[index+1] 
+           count += 1
+         else
+           return false if count != MAX_REPEATS 
+         end   
+       end
+    end
+    true
+  end
    
 end
 @player=Player.new
-#@player.calculate_points(1,1)
-#puts @player.calculate_points(1,2)
- 3.times { |i| @player.calculate_points(3,i)}
-  puts @player.points
+5.times { |i| @player.calculate_points(6,i) }
+#puts @player.values[4] 
