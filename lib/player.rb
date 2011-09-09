@@ -1,13 +1,19 @@
+require 'dice'
+
 class Player
+  
   attr_accessor :count
   attr_accessor :points
   attr_accessor :values
+  attr_accessor :eligible_flag
   MAX_REPEATS = 3
+  ELIGIBLE_SCORE = 300
   
   def initialize 
     @count = 0
     @points = 0
-    @values = Array.new(5)
+    @eligible_flag = 0
+    @values = Hash.new(5)
   end
   
   def calculate_points(value, iteration)
@@ -31,16 +37,23 @@ class Player
     @previous_value = value
   end 
   
+  def got_eligible_score?
+    @eligible_flag = 1 if @points >= ELIGIBLE_SCORE
+    return true if @eligible_flag == 1
+    false
+  end
+
   def has_next_chance?
-    previous_value = 0
-    count=1
-    @values.each do |index, value| 
-       if [2,3,4,6].include?(value)
-         if @values[index] == @values[index+1] 
-           count += 1
-         else
-           return false if count != MAX_REPEATS 
-         end   
+    count = 0
+    @values.each do |k, v| 
+       if [2,3,4,6].include?(v)
+         count += 1
+         if k > 0
+           count = 2 if k == 1 && @values[k] == @values[k-1]
+           return false if k == 4 && count != MAX_REPEATS
+           count = 0 if @values[k] == @values[k-1] && count == MAX_REPEATS
+           return false if @values[k] != @values[k-1]  && count == 3   
+         end
        end
     end
     true
@@ -48,5 +61,9 @@ class Player
    
 end
 @player=Player.new
-5.times { |i| @player.calculate_points(6,i) }
-#puts @player.values[4] 
+@player.calculate_points(5,0)
+@player.calculate_points(6,1)   
+@player.calculate_points(3,2)
+@player.calculate_points(3,3)
+@player.calculate_points(3,4)  
+#puts @player.has_next_chance? 

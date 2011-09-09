@@ -1,4 +1,5 @@
 require 'player'
+
 describe Player do
   
   before(:each) do
@@ -45,10 +46,19 @@ describe Player do
     @player.points.should == 50
   end
   
+  it "gets eligible to count his score, if he get 300 score" do
+    3.times { |i| @player.calculate_points(6,i) }
+    @player.got_eligible_score?.should be_true
+  end
   it "gets second chance again if he gets score for five rolls" do
-    5.times { |i| @player.calculate_points(6,i) }  
+    @player.calculate_points(1,0)
+    @player.calculate_points(3,1)   
+    @player.calculate_points(3,2)
+    @player.calculate_points(3,3)
+    @player.calculate_points(5,4)  
     @player.has_next_chance?.should be_true
   end
+  
 end
 
 
