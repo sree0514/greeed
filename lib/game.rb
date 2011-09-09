@@ -34,6 +34,4 @@ class Game
   end
   
 end
-g = Game.new(Player.new, Player.new)
-g.start
-puts g.winner  
+  
